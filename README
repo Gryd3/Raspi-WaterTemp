@@ -1,0 +1,13 @@
+Lots of little mods to drewhavard/rasp-sous-vide.
+ToDo:
+ - Ensure Setup runs properly/flawlessly every time.
+ - Check config file to ensure 1-wire is setup properly
+ - Split daemon into 2 parts to easily drop in other temp measurement methods
+ - auto-start daemon on system run/reboot (setup.sh should do this!)
+ - set a timer on the get_temp daemon to measure once/sec or less
+ - regular backup of graph items and rrd db to non-volitile storage
+
+Done:
+ - Moved graphing items and db to tmpfs to avoid burning our SD-card
+ - Gutted some of the web-page / replaced missing info with anhanced graphs
+ - setup.sh file to copy files and set initial configs... may also update and isntall deps if uncommented.
