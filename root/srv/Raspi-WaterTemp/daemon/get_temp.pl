@@ -1,9 +1,9 @@
 #!/usr/bin/perl
  
-my $dir = '/home/sousvide';
-my $is_celsius = 0; #set to 1 if using Celsius
+my $dir = '/srv/Raspi-WaterTemp';
+my $is_celsius = 1; #set to 1 if using Celsius
 my $relay_pin = 17; #which GPIO pin the relay is connected to
-my $target_temp_filename = '/home/sousvide/targettemp.txt';
+my $target_temp_filename = $dir . '/www/targettemp.txt';
  
 $modules = `cat /proc/modules`;
 if ($modules =~ /w1_therm/ && $modules =~ /w1_gpio/)
@@ -15,7 +15,6 @@ else
         $gpio = `sudo modprobe w1-gpio`;
         $therm = `sudo modprobe w1-therm`;
 }
-
 #print "Got this far\n";
 
 
@@ -50,15 +49,16 @@ open my $fh, "<", $target_temp_filename;
 	        {
 	                $output =~ /t=(\d+)/i;
 	                $temp = ($is_celsius) ? ($1 / 1000) : ($1 / 1000) * 9/5 + 32;
-	                $rrd = `/usr/bin/rrdtool update $dir/watertemp.rrd N:$temp`;
+	                $rrd = `/usr/bin/rrdtool update $dir/www/graphs/watertemp.rrd N:$temp`;
 	        }
 	 
 	        $attempts++;
 	}
 $loops = $loops + 1;
+
 if($loops >1) #Creates graphs every other loop
 {
-	system("bash '$dir'/create_graphs.sh");
+	system("bash '$dir'/daemon/create_graphs.sh");
 	$loops = 0;
 }
 while( my $line = <$fh>)  

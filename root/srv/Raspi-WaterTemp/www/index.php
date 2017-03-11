@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<?php
-	$targetTempFile = "targettemp.txt";
-	$targetTimerFile = "timer.txt";
-	if(isset($_POST["submit"])) 
+	$targetTempFile = "graphs/targettemp.txt";
+	$targetTimerFile = "graphs/timer.txt";
+	if(isset($_POST["submit"]))
 	{
 		if(isset($_POST["newTargetTemp"]))
 		{
 			$newTemp = $_POST["newTargetTemp"];
-			$tempFile = fopen("targettemp.txt", "w") or die("Unable to open file!");
+			$tempFile = fopen("graphs/targettemp.txt", "w") or die("Unable to open file!");
 			fwrite($tempFile, $newTemp);
 			fclose($tempFile);
 		}
@@ -22,22 +22,21 @@
 	<script>
 	refreshImage=function()
 	{
-		minute=document.getElementById("minute");
-		minute.src="temp_minute.png?" + new Date().getTime();
-		fifteenminutes=document.getElementById("15minutes");
-		fifteenminutes.src="temp_15minute.png?"+ new Date().getTime();
-		$.get('targettemp.txt').then(function(responseData) 
+		shortgrph=document.getElementById("shortgrph");
+		shortgrph.src="graphs/temp_short.png?" + new Date().getTime();
+
+		longgrph=document.getElementById("longgrph");
+		longgrph.src="graphs/temp_long.png?"+ new Date().getTime();
+
+		$.get('graphs/targettemp.txt').then(function(responseData)
 		{
-	  		$('#targetTemp').empty().append(responseData);	
+	  		$('#targetTemp').empty().append(responseData);
 		});
 	}
 	</script>
 </head>
 <body onload="window.setInterval(refreshImage, 1000);">
-<h1 id="title">Sous Vide Status</h1>
-<p>This page shows the current status of the Sous Vide machine</p>
-<p>Current target temperature is:<b id="targetTemp"></b></p>
-
+<h1 id="title">Water Tempurature Status</h1>
 
 <form action="index.php" method="post" enctype="multipart/form-data">
         Input new temperature:
@@ -46,11 +45,11 @@
 	Input new timer in minutes:
         <input type="text" name="newTimerOffset" id="newTimerOffset">
 	<br>
-	<input type="submit" value="Upload New Values" name="submit">
+	<input type="submit" value="Submit New Values" name="submit">
 </form>
 <div>
 <p>Current actual temperatures:</p>
-<img id="15minutes" src="temp_15minute.png" alt="15 minute temperature graph">
-<img id="minute" src="temp_minute.png" alt="60 second temperature graph">
+<img id="shortgrph" src="graphs/temp_short.png" alt="60 second temperature graph"><br>
+<img id="longgrph" src="graphs/temp_long.png" alt="15 minute temperature graph">
 </div>
 </body></html>
